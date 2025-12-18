@@ -1,5 +1,11 @@
 package main
 
+import (
+	"fmt"
+
+	"github.com/Maltide/link-shortener/logger"
+)
+
 // import (
 // 	"fmt"
 // 	"net/http"
@@ -11,6 +17,11 @@ package main
 // }
 
 func main() {
+	log, err := logger.Logger("debug")
+	if err != nil {
+		fmt.Errorf("fail to create logger: ", err)
+		return
+	}
 	// server := &http.Server{
 	// 	Addr:         ":8080",
 	// 	Handler:      http.HandlerFunc(handler),

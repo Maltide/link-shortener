@@ -29,6 +29,7 @@
 
         return string(resString)
     }
+    
     func shortHandler(w http.ResponseWriter, r *http.Request) {
         r.ParseForm()
 
