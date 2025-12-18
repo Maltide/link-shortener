@@ -8,12 +8,33 @@
 
     some handlers for short, redirect, like:
 
+    func hash (s string) string {
+        result := 0
+
+        for i := range s {
+            result = (result * 7 + int[s[i]]) % 1000
+        }
+
+        alphabit := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+        resString := make([]rune, 0, 7)
+
+        for result > 0 && len(resString) != 7 {
+            symbolIndex := result % len(alphabit)
+
+            resString = append(resString, rune(alphabit[symbolIndex]))
+
+            result = result / len(alphabit)
+        }
+
+        return string(resString)
+    }
     func shortHandler(w http.ResponseWriter, r *http.Request) {
         r.ParseForm()
 
         linkIn := r.FormValue("url")
 
-        shortLink := hashfunction(linkIn)
+        shortLink := hash(linkIn)
 
         add pair in DB (LinkIn == shortLink)
 
@@ -25,10 +46,8 @@
         r.ParseForm()
 
         if r.FormValue("url") have in DB{
-            w.Write(DB.shortLink)
-        } else {
-            shortHandler(w, r)
-        }
+            redirect on original
+        } 
     }
     r := chi.NewRouter()
 
