@@ -6,30 +6,8 @@
 
     At first, we need to create a connection with our db, than create a handler with POST-request from users which is send link that we need to short. 
 
-    some handlers for short, redirect, like:
+    some handlers for short, redirect
 
-    func hash (s string) string {
-        result := 0
-
-        for i := range s {
-            result = (result * 7 + int[s[i]]) % 1000
-        }
-
-        alphabit := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-        resString := make([]rune, 0, 7)
-
-        for result > 0 && len(resString) != 7 {
-            symbolIndex := result % len(alphabit)
-
-            resString = append(resString, rune(alphabit[symbolIndex]))
-
-            result = result / len(alphabit)
-        }
-
-        return string(resString)
-    }
-    
     func shortHandler(w http.ResponseWriter, r *http.Request) {
         r.ParseForm()
 

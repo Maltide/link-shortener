@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/Maltide/link-shortener/logger"
+	"github.com/Maltide/link-shortener/pkg/logger"
 )
 
 // import (
@@ -17,6 +17,10 @@ import (
 // }
 
 func main() {
+	cfg, err := LoadConfig()
+	if err != nil {
+		return err
+	}
 	log, err := logger.Logger("debug")
 	if err != nil {
 		fmt.Errorf("fail to create logger: ", err)

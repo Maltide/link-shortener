@@ -26,3 +26,5 @@ func Logger(loglevel string) (*zap.SugaredLogger, error) {
 
 	return logger.Sugar(), nil
 }
+
+//best practice!
