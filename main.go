@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/Maltide/link-shortener/pkg/config"
 	"github.com/Maltide/link-shortener/pkg/logger"
 )
 
@@ -17,9 +18,10 @@ import (
 // }
 
 func main() {
-	cfg, err := LoadConfig()
+	cfg, err := config.LoadConfig()
 	if err != nil {
-		return err
+		fmt.Errorf("fail to create config:", err)
+		return
 	}
 	log, err := logger.Logger("debug")
 	if err != nil {
