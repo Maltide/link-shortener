@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/Maltide/link-shortener/pkg/config"
@@ -18,16 +19,20 @@ import (
 // }
 
 func main() {
+	db, err := sql.Open("postgres", "user=postgres password")
+
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		fmt.Errorf("fail to create config:", err)
 		return
 	}
+
 	log, err := logger.Logger("debug")
 	if err != nil {
 		fmt.Errorf("fail to create logger: ", err)
 		return
 	}
+
 	// server := &http.Server{
 	// 	Addr:         ":8080",
 	// 	Handler:      http.HandlerFunc(handler),

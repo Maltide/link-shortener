@@ -2,38 +2,57 @@ package hash
 
 import (
 	"fmt"
+	"strings"
 
 	"go.uber.org/zap"
 )
 
-func hash(s string, log *zap.SugaredLogger) (string, error) {
-	if len(s) == 0 {
-		log.Error("empty input string from user")
+func hash(id int, log *zap.SugaredLogger) (string, error) {
+	if id <= 0 {
+		log.Error("hash function error: unexpected nonpositive id")
 
-		return "", fmt.Errorf("empty input string from user")
+		return "", fmt.Errorf("unexpected negative id")
 	}
-
-	hashValue := 0
-
-	for i := range s {
-		hashValue = (hashValue*7 + int(s[i])) % 1000
-	}
-
-	log.Infof("hashValue after for:", hashValue)
 
 	alphabit := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 	resString := make([]rune, 0, 7)
 
-	for hashValue > 0 && len(resString) != 7 {
-		symbolIndex := hashValue % len(alphabit)
+	for id > 0 {
+		symbolIndex := id % len(alphabit)
 
 		resString = append(resString, rune(alphabit[symbolIndex]))
 
-		hashValue = hashValue / len(alphabit)
+		id = id / len(alphabit)
 	}
 
 	log.Infof("short string after proccessing is:", resString)
 
+	for i := 0; i < len(resString)/2; i++ {
+		resString[i], resString[len(resString)-i-1] = resString[len(resString)-i-1], resString[i]
+	}
+
 	return string(resString), nil
+}
+
+func redirectHash(hashLink string, log *zap.SugaredLogger) (int, error) {
+	if len(hashLink) == 0 {
+		log.Error("redirect function error: empty input hash string")
+		return 0, fmt.Errorf("empty input hash string")
+	}
+	id := 0
+
+	alphabit := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+	for _, currentRune := range hashLink {
+		runeIndex := strings.IndexRune(alphabit, currentRune)
+
+		if runeIndex == -1 {
+			log.Error("redirect hash: symbol not found in 62alphabit")
+
+			return 0, fmt.Errorf("redirect hash: symbol not found in 62alphabit")
+		}
+		id = id*len(alphabit) + runeIndex
+	}
+	return id, nil
 }

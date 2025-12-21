@@ -5,9 +5,7 @@ import (
 )
 
 type Config struct {
-	TGToken   string
-	LogLevel  string
-	TGTimeout int
+	LogLevel string
 }
 
 func LoadConfig() (Config, error) {
