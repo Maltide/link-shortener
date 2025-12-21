@@ -2,10 +2,11 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 
+	"github.com/Maltide/link-shortener/helpers"
 	"github.com/Maltide/link-shortener/pkg/config"
 	"github.com/Maltide/link-shortener/pkg/logger"
+	_ "github.com/lib/pq"
 )
 
 // import (
@@ -19,19 +20,28 @@ import (
 // }
 
 func main() {
-	db, err := sql.Open("postgres", "user=postgres password")
-
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		fmt.Errorf("fail to create config:", err)
 		return
 	}
 
 	log, err := logger.Logger("debug")
 	if err != nil {
-		fmt.Errorf("fail to create logger: ", err)
 		return
 	}
+
+	connStr := helpers.ConnStr(cfg)
+
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatalf("failed to open DB: %v", err)
+	}
+
+	if err := db.Ping(); err != nil {
+		log.Fatalf("failed to connect to DB: %v", err)
+	}
+
+	log.Infof("db was inizialised with params:")
 
 	// server := &http.Server{
 	// 	Addr:         ":8080",

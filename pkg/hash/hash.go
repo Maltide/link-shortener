@@ -11,7 +11,7 @@ func hash(id int, log *zap.SugaredLogger) (string, error) {
 	if id <= 0 {
 		log.Error("hash function error: unexpected nonpositive id")
 
-		return "", fmt.Errorf("unexpected negative id")
+		return "", fmt.Errorf("unexpected nonpositive id")
 	}
 
 	alphabit := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

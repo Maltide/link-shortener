@@ -24,6 +24,8 @@ func Logger(loglevel string) (*zap.SugaredLogger, error) {
 		return nil, err
 	}
 
+	logger.Info("logger succesfully created")
+
 	return logger.Sugar(), nil
 }
 

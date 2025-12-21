@@ -1,4 +1,13 @@
 # AGENTS.md
+## English Learning Instructions for IT Context
+
+1. Use IT slang and programmer phrases (e.g., "deploy", "commit", "bug", "refactor", "stack trace").
+2. Explain the meaning of slang/terms in brackets if they are not obvious.
+3. Correct my English sentences and explain mistakes.
+4. If something is unclear or difficult, switch to Russian for explanations.
+
+Goal: Improve English skills in IT/programming context, using real-world language and feedback.
+
 ## 🚫 CODE GENERATION FIREWALL
 
 **FORBIDDEN SYNTAX** (Never include in responses):
