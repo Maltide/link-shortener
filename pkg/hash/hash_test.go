@@ -21,13 +21,13 @@ func TestHashAndRedirectHash(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			short, err := hash(tt.id, log)
+			short, err := Hash(tt.id, log)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("%q: unexpected err: %v, wantErr=%v", tt.name, err, tt.wantErr)
 				return
 			}
 			if err == nil {
-				gotId, err := redirectHash(short, log)
+				gotId, err := RedirectHash(short, log)
 				if err != nil {
 					t.Errorf("%q: redirectHash error: %v", tt.name, err)
 				}

@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func hash(id int, log *zap.SugaredLogger) (string, error) {
+func Hash(id int, log *zap.SugaredLogger) (string, error) {
 	if id <= 0 {
 		log.Error("hash function error: unexpected nonpositive id")
 
@@ -26,16 +26,16 @@ func hash(id int, log *zap.SugaredLogger) (string, error) {
 		id = id / len(alphabit)
 	}
 
-	log.Infof("short string after proccessing is:", resString)
-
 	for i := 0; i < len(resString)/2; i++ {
 		resString[i], resString[len(resString)-i-1] = resString[len(resString)-i-1], resString[i]
 	}
 
+	log.Infof("short string after proccessing is:%v", resString)
+
 	return string(resString), nil
 }
 
-func redirectHash(hashLink string, log *zap.SugaredLogger) (int, error) {
+func RedirectHash(hashLink string, log *zap.SugaredLogger) (int, error) {
 	if len(hashLink) == 0 {
 		log.Error("redirect function error: empty input hash string")
 		return 0, fmt.Errorf("empty input hash string")
