@@ -23,10 +23,26 @@ func ShortHandler(db *sql.DB, log *zap.SugaredLogger) http.HandlerFunc {
 			return
 		}
 
+		resp, err := http.Head(linkIn)
+		if err != nil {
+			log.Errorf("status check issue: %v", err)
+			http.Error(w, "link is not valid", http.StatusInternalServerError)
+			return
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			log.Errorf("url not exist in IANA")
+			http.Error(w, "link is not valid", http.StatusInternalServerError)
+			resp.Body.Close()
+			return
+		} else {
+			resp.Body.Close()
+		}
+
 		var id int
 		var shortLink string
 
-		err := db.QueryRow("SELECT hash_link FROM links WHERE original_link = $1", linkIn).Scan(&shortLink)
+		err = db.QueryRow("SELECT hash_link FROM links WHERE original_link = $1", linkIn).Scan(&shortLink)
 		if err == nil {
 			w.Write([]byte(shortLink))
 			return
