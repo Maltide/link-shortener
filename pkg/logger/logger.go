@@ -1,3 +1,4 @@
+// Package logger provides a configured zap logger for application logging.
 package logger
 
 import (
@@ -7,6 +8,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// Logger creates and configures a zap.SugaredLogger with the specified log level.
 func Logger(loglevel string) (*zap.SugaredLogger, error) {
 	cfg := zap.NewProductionConfig()
 
@@ -28,5 +30,3 @@ func Logger(loglevel string) (*zap.SugaredLogger, error) {
 
 	return logger.Sugar(), nil
 }
-
-//best practice!

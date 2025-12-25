@@ -1,3 +1,4 @@
+// Package main is the entry point for the link shortener application.
 package main
 
 import (
@@ -11,6 +12,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// main initializes configuration, logger, database connection, and starts the server.
 func main() {
 	cfg, err := config.LoadConfig()
 	if err != nil {
@@ -35,10 +37,10 @@ func main() {
 	}
 
 	if err := helpers.InitDB(db); err != nil {
-		log.Fatalf("InitDB: fail to inizialize table: %v", err)
+		log.Fatalf("InitDB: fail to initialize table: %v", err)
 	}
 
-	log.Infof("db was inizialised with params")
+	log.Infof("db was initialized with params")
 
 	server.StartServer(db, log)
 

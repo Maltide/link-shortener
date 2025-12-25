@@ -1,3 +1,4 @@
+// Package config handles loading and storing application configuration from environment variables.
 package config
 
 import (
@@ -16,6 +17,7 @@ type Config struct {
 	DBPort   string
 }
 
+// LoadConfig loads environment variables from the .env file and returns a configuration struct.
 func LoadConfig() (Config, error) {
 	err := godotenv.Load() // loads .env file into os.Getenv
 	if err != nil {

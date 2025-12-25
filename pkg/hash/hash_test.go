@@ -1,13 +1,29 @@
 package hash
 
 import (
+	"database/sql"
 	"testing"
 
+	"github.com/Maltide/link-shortener/pkg/config"
+	"github.com/Maltide/link-shortener/pkg/helpers"
 	"go.uber.org/zap"
 )
 
 func TestHashAndRedirectHash(t *testing.T) {
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		return
+	}
+
 	log := zap.NewNop().Sugar()
+
+	connStr := helpers.ConnStr(cfg)
+
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatalf("failed to open DB: %v", err)
+	}
+
 	tests := []struct {
 		name    string
 		id      int
@@ -19,9 +35,17 @@ func TestHashAndRedirectHash(t *testing.T) {
 		{"large", 123456, false},
 		{"negative", -1, true},
 	}
+
+	pair_counter = 1000000
+
+	short, err := Hash(1, log, db)
+	if err != nil || short == "" {
+		t.Errorf("hash failed after cleanup: err=%v, short=%q", err, short)
+	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			short, err := Hash(tt.id, log)
+			short, err := Hash(tt.id, log, db)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("%q: unexpected err: %v, wantErr=%v", tt.name, err, tt.wantErr)
 				return

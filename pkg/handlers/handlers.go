@@ -1,3 +1,4 @@
+// Package handlers contains HTTP handlers for URL shortening and redirection.
 package handlers
 
 import (
@@ -10,16 +11,27 @@ import (
 	"go.uber.org/zap"
 )
 
+// ShortHandler handles requests for URL shortening, creates short link, and returns it to the client.
 func ShortHandler(db *sql.DB, log *zap.SugaredLogger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
+		err := r.ParseForm()
+		if err != nil {
+			log.Errorf("parseForm issue: %v", err)
+			http.Error(w, "parse link error", http.StatusInternalServerError)
+			return
+		}
 
 		linkIn := r.FormValue("url")
 
 		if strings.HasPrefix(linkIn, "http://localhost:8080/") || strings.HasPrefix(linkIn, "https://localhost:8080/") {
 			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("Wrong request!"))
+			_, err = w.Write([]byte("Wrong request!"))
+			if err != nil {
+				log.Errorf("w.Write(after strings.HasPrefix) issue: %v", err)
+				http.Error(w, "can't answer to you right now", http.StatusInternalServerError)
+				return
+			}
 			return
 		}
 
@@ -44,7 +56,12 @@ func ShortHandler(db *sql.DB, log *zap.SugaredLogger) http.HandlerFunc {
 
 		err = db.QueryRow("SELECT hash_link FROM links WHERE original_link = $1", linkIn).Scan(&shortLink)
 		if err == nil {
-			w.Write([]byte(shortLink))
+			_, err = w.Write([]byte(shortLink))
+			if err != nil {
+				log.Errorf("w.Write(after db.QueryRow) issue: %v", err)
+				http.Error(w, "can't answer to you right now", http.StatusInternalServerError)
+				return
+			}
 			return
 		} else if err != sql.ErrNoRows {
 			log.Errorf("dbQuery row issue: %v", err)
@@ -59,7 +76,7 @@ func ShortHandler(db *sql.DB, log *zap.SugaredLogger) http.HandlerFunc {
 			return
 		}
 
-		shortLink, err = hash.Hash(id, log)
+		shortLink, err = hash.Hash(id, log, db)
 		if err != nil {
 			log.Errorf("hash issue: %v", err)
 			http.Error(w, "DB update error", http.StatusInternalServerError)
@@ -72,15 +89,18 @@ func ShortHandler(db *sql.DB, log *zap.SugaredLogger) http.HandlerFunc {
 			return
 		}
 
-		w.Write([]byte(shortLink))
+		_, err = w.Write([]byte(shortLink))
+		if err != nil {
+			log.Errorf("w.Write(when try to send shortLink) issue: %v", err)
+			http.Error(w, "can't answer to you right now", http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
+// RedirectHandler handles redirection from short link to the original URL.
 func RedirectHandler(db *sql.DB, log *zap.SugaredLogger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// r.ParseForm()
-
-		// linkIn := r.FormValue("url")
 
 		hash := chi.URLParam(r, "hash")
 

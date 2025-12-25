@@ -1,17 +1,31 @@
+// Package hash provides functions for generating and decoding short URL hash.
 package hash
 
 import (
+	"database/sql"
 	"fmt"
 	"strings"
 
+	"github.com/Maltide/link-shortener/pkg/helpers"
 	"go.uber.org/zap"
 )
 
-func Hash(id int, log *zap.SugaredLogger) (string, error) {
+var pair_counter int = 0
+
+// Hash generates a short link based on the row-id from DB. Clears the 'links' table when the limit is reached.
+func Hash(id int, log *zap.SugaredLogger, db *sql.DB) (string, error) {
 	if id <= 0 {
 		log.Error("hash function error: unexpected nonpositive id")
 
 		return "", fmt.Errorf("unexpected nonpositive id")
+	}
+
+	if pair_counter >= 1000000 {
+		err := helpers.ClearDB(db, log)
+		if err != nil {
+			return "", err
+		}
+		pair_counter = 0
 	}
 
 	alphabit := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -32,9 +46,12 @@ func Hash(id int, log *zap.SugaredLogger) (string, error) {
 
 	log.Infof("short string after proccessing is:%v", resString)
 
+	pair_counter++
+
 	return string(resString), nil
 }
 
+// RedirectHash converts a short link back to an id and find original-url from DB.
 func RedirectHash(hashLink string, log *zap.SugaredLogger) (int, error) {
 	if len(hashLink) == 0 {
 		log.Error("redirect function error: empty input hash string")
@@ -54,5 +71,6 @@ func RedirectHash(hashLink string, log *zap.SugaredLogger) (int, error) {
 		}
 		id = id*len(alphabit) + runeIndex
 	}
+
 	return id, nil
 }

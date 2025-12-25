@@ -1,0 +1,72 @@
+version: 2
+
+run:
+  # Timeout for analysis
+  timeout: 5m
+
+  # Include test files or not
+  tests: true
+
+linters:
+  # Enable specific linters
+  enable:
+    # Default linters enabled by golangci-lint
+    - errcheck
+    # - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+  
+    # Additional useful linters
+    # - gofmt
+    - misspell
+    - revive
+    - unconvert
+    - whitespace
+
+  # Disable specific linters
+  disable: []
+
+linters-settings:
+  # Settings for specific linters
+  errcheck:
+    # Report about not checking of errors in type assertions: `a := b.(MyStruct)`.
+    check-type-assertions: false
+
+
+  revive:
+    # Enable all available rules
+    enable-all-rules: false
+    # Configuration for specific rules
+    rules:
+      - name: var-naming
+        severity: warning
+        disabled: false
+
+issues:
+  # Maximum count of issues to exit with non-zero code
+  max-issues-per-linter: 0
+  
+  # Maximum count of issues to exit with non-zero code
+  max-same-issues: 0
+  
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+
+    # Exclude known linters from partially hard-vendored code,
+    # which is impossible to exclude via "nolint" comments.
+    - path: internal/hmac/
+      text: "weak cryptographic primitive"
+      linters:
+        - gosec
+
+  # Independently of option `exclude` we use default exclude patterns
+  exclude-use-default: false
