@@ -113,6 +113,10 @@
       margin-left: auto;
       margin-right: auto;
       width: var(--shortener-width, 320px);
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
     }
     #result a:hover {
       background: linear-gradient(-45deg, #8BB837 0%, #0A483B 100%);
@@ -133,6 +137,9 @@
       display: inline-flex;
       align-items: center;
       box-shadow: none;
+    .copied-msg.visible {
+      opacity: 1;
+    }
     }
     .copy-btn:hover {
       background: transparent;
@@ -159,6 +166,16 @@
     .copy-img-green {
       /* Средний цвет между #0A483B и #8BB837 примерно #4C9A35 */
       filter: brightness(0) saturate(100%) invert(41%) sepia(77%) saturate(1046%) hue-rotate(56deg) brightness(95%) contrast(92%);
+    }
+    .copied-msg {
+      color: #8BB837;
+      font-size: 1.05em;
+      margin-left: 10px;
+      font-weight: bold;
+      vertical-align: baseline;
+      display: inline-block;
+      opacity: 0;
+      transition: opacity 0.2s;
     }
   </style>
   <input id="linkInput" class="shortener-input" type="text" placeholder="Enter your link here" oninput="resizeInput(this)">
@@ -192,23 +209,27 @@
             '<div style="display:flex;flex-direction:column;align-items:center;width:100%;">'
               + '<div class="result-row" style="width:var(--shortener-width,320px);padding:0 2px;">'
                 + '<b class="short-label" style="margin-left:2px;">Your short link:</b>'
+                + '<span id="copied-msg" class="copied-msg">Copied!</span>'
                 + '<button class="copy-btn" onclick="copyToClipboard(\'' + shortUrl + '\')" title="Copy" aria-label="Copy">'
                   + `<img src=\"/static/copy.png\" alt=\"Copy\" width=\"35\" height=\"35\" class=\"copy-img-green\" />`
                 + '</button>'
-                + '<span id="copied-msg" class="copied-msg">Copied!</span>'
               + '</div>'
-              + '<a href="' + shortUrl + '" target="_blank">' + shortUrl + '</a>'
+              + '<a href="' + shortUrl + '" target="_blank" draggable="false">' + shortUrl + '</a>'
             + '</div>';
         } else {
+          let tip = '';
+          if (text !== 'This site does not allow shortening its links.' && !text.includes('timeout') && !text.includes('handshake')) {
+            tip = '<div style="color:#ffe082;font-size:1.5rem;font-weight:normal;margin-top:32px;text-align:center;">'
+              + 'Tip: try to use&nbsp;<b>http://your_link</b>&nbsp;or&nbsp;<b>https://your_link</b>, not just&nbsp;<b>www.google.com</b>'
+              + '</div>';
+          }
           document.getElementById('result').innerHTML =
             '<div class="error-box">'
             + '<span class="error-icon">'
             + '<img src="/static/Error.png" alt="!" class="error-icon" />'
             + '</span>'
               + text + '</div>'
-            + '<div class="error-box" style="background:#232323;color:#ffe082;font-size:1.05rem;font-weight:normal;margin-top:10px;">'
-            + 'Tip: try to use&nbsp;<b>http://your_link</b>&nbsp;or&nbsp;<b>https://your_link</b>, not just&nbsp;<b>www.google.com</b>'
-            + '</div>';
+            + tip;
         }
       });
     }

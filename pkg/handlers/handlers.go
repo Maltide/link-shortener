@@ -35,16 +35,23 @@ func ShortHandler(db *sql.DB, log *zap.SugaredLogger) http.HandlerFunc {
 			return
 		}
 
-		resp, err := http.Head(linkIn)
+		req, _ := http.NewRequest("HEAD", linkIn, nil)
+		req.Header.Set("User-Agent", "Mozilla/5.0")
+		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
 			log.Errorf("status check issue: %v", err)
-			http.Error(w, "link is not valid", http.StatusInternalServerError)
+			errMsg := err.Error()
+			if strings.Contains(errMsg, "timeout") || strings.Contains(errMsg, "handshake") {
+				http.Error(w, "Network error: unable to check this link (timeout or handshake error).", http.StatusGatewayTimeout)
+			} else {
+				http.Error(w, "link is not valid", http.StatusInternalServerError)
+			}
 			return
 		}
 
 		if resp.StatusCode != http.StatusOK {
-			log.Errorf("url not exist in IANA")
-			http.Error(w, "link is not valid", http.StatusInternalServerError)
+			log.Errorf("url not exist in IANA or site blocks requests")
+			http.Error(w, "This site does not allow shortening its links.", http.StatusForbidden)
 			resp.Body.Close()
 			return
 		} else {
