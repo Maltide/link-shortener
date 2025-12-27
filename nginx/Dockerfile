@@ -5,8 +5,6 @@ FROM nginx:stable
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # (Опционально) Копируем статику, если нужно
-COPY ../static/ /usr/share/nginx/html/
+# COPY ../static/ /usr/share/nginx/html/
 
 # Сертификаты будут пробрасываться через volume, поэтому отдельный COPY не нужен
-FROM nginx:stable
-COPY 
