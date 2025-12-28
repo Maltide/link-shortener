@@ -30,8 +30,7 @@ services:
       - "443:443"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /home/maltid/testingServer/static:/usr/share/nginx/html/static:ro
+      - /home/maltid/link-shortener/static:/usr/share/nginx/html/static:ro
 
 volumes:
   pgdata: 
