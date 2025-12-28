@@ -14,7 +14,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
   app:
-    build: .
+    image: link-shortener-app:latest
     depends_on:
       - postgres
     env_file:
@@ -22,7 +22,7 @@ services:
     ports:
       - "8080:8080" 
   nginx:
-    build: ./nginx
+    image: link-shortener-nginx:latest
     depends_on:
       - app
     ports:
