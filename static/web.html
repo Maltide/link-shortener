@@ -184,16 +184,21 @@
   <script>
     function resizeInput(input) {
       input.style.width = Math.max(320, input.value.length * 10) + 'px';
-      // Синхронизируем ширину плашки-ссылки с шириной поля ввода
-      document.documentElement.style.setProperty('--shortener-width', input.offsetWidth + 'px');
+      syncShortenerWidth();
     }
-    // При загрузке страницы и ресайзе окна — синхронизируем ширину
+
     function syncShortenerWidth() {
       var input = document.getElementById('linkInput');
       if (input) {
         document.documentElement.style.setProperty('--shortener-width', input.offsetWidth + 'px');
+        // Синхронизируем ширину блока результата и кнопки Copy
+        var resultRow = document.querySelector('.result-row');
+        if (resultRow) {
+          resultRow.style.width = input.offsetWidth + 'px';
+        }
       }
     }
+
     function shorten() {
       const url = document.getElementById('linkInput').value;
       fetch('/short', {
@@ -207,15 +212,16 @@
           const shortUrl = window.location.origin + '/' + text;
           document.getElementById('result').innerHTML =
             '<div style="display:flex;flex-direction:column;align-items:center;width:100%;">'
-              + '<div class="result-row" style="width:var(--shortener-width,320px);padding:0 2px;">'
+              + '<div class="result-row" style="width:' + document.getElementById('linkInput').offsetWidth + 'px;padding:0 2px;">'
                 + '<b class="short-label" style="margin-left:2px;">Your short link:</b>'
                 + '<span id="copied-msg" class="copied-msg">Copied!</span>'
                 + '<button class="copy-btn" onclick="copyToClipboard(\'' + shortUrl + '\')" title="Copy" aria-label="Copy">'
-                  + `<img src=\"/static/copy.png\" alt=\"Copy\" width=\"35\" height=\"35\" class=\"copy-img-green\" />`
+                  + '<img src="/static/copy.png" alt="Copy" width="35" height="35" class="copy-img-green" />'
                 + '</button>'
               + '</div>'
               + '<a href="' + shortUrl + '" target="_blank" draggable="false">' + shortUrl + '</a>'
             + '</div>';
+          syncShortenerWidth();
         } else {
           let tip = '';
           if (text !== 'This site does not allow shortening its links.' && !text.includes('timeout') && !text.includes('handshake')) {
@@ -233,6 +239,7 @@
         }
       });
     }
+
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(function() {
         var msg = document.getElementById('copied-msg');
@@ -244,9 +251,11 @@
         }
       });
     }
+
     // Initial resize for autofill or prefilled value
     window.onload = function() {
       resizeInput(document.getElementById('linkInput'));
+      window.addEventListener('resize', syncShortenerWidth);
     }
   </script>
 </body>
