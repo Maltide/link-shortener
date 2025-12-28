@@ -164,8 +164,8 @@
       line-height: 1.1;
     }
     .copy-img-green {
-      /* Лёгкий зелёный фильтр */
-      filter: hue-rotate(70deg) brightness(1.2) saturate(2);
+      /* Без фильтра, чтобы проверить видимость */
+      filter: none;
     }
     .copied-msg {
       color: #8BB837;
@@ -222,28 +222,32 @@
               + '<a href="' + shortUrl + '" target="_blank" draggable="false">' + shortUrl + '</a>'
             + '</div>';
           syncShortenerWidth();
-        } else {
-          let tip = '';
-          if (text !== 'This site does not allow shortening its links.' && !text.includes('timeout') && !text.includes('handshake')) {
-            tip = '<div style="color:#ffe082;font-size:1.5rem;font-weight:normal;margin-top:32px;text-align:center;">'
-              + 'Tip: try to use&nbsp;<b>http://your_link</b>&nbsp;or&nbsp;<b>https://your_link</b>, not just&nbsp;<b>www.google.com</b>'
-              + '</div>';
-          }
-          document.getElementById('result').innerHTML =
-            '<div class="error-box">'
-            + '<span class="error-icon">'
-            + '<img src="/static/Error.png" alt="!" class="error-icon" />'
-            + '</span>'
-              + text + '</div>'
-            + tip;
+        #result a {
+          color: #fff;
+          text-decoration: none;
+          background: linear-gradient(-45deg, #0A483B 0%, #8BB837 100%);
+          padding: 14px 32px;
+          border-radius: 12px;
+          font-weight: bold;
+          font-size: 1.25rem;
+          box-shadow: 0 2px 8px rgba(10,72,59,0.10);
+          transition: background 0.2s, color 0.2s, box-shadow 0.2s, width 0.2s;
+          display: inline-block;
+          margin-top: 0;
+          box-sizing: border-box;
+          text-align: center;
+          margin-left: auto;
+          margin-right: auto;
+          min-width: 120px;
+          max-width: 90vw;
+          width: auto;
+          user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          white-space: nowrap;
+          overflow-x: auto;
         }
-      });
-    }
-
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(function() {
-        var msg = document.getElementById('copied-msg');
-        if (msg) {
           msg.classList.add('visible');
           setTimeout(function() {
             msg.classList.remove('visible');
