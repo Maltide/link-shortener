@@ -186,25 +186,10 @@
   <div id="result"></div>
   <script>
     function resizeInput(input) {
-      input.style.width = Math.max(320, input.value.length * 10) + 'px';
-      syncShortenerWidth();
+        input.style.width = Math.max(320, input.value.length * 10) + 'px';
     }
 
-    function syncShortenerWidth() {
-      var input = document.getElementById('linkInput');
-      if (input) {
-        document.documentElement.style.setProperty('--shortener-width', input.offsetWidth + 'px');
-        // Синхронизируем ширину только input
-        // var resultRow = document.getElementById('short-result-row');
-        // var shortLink = document.getElementById('short-link-anchor');
-        // if (resultRow) {
-        //   resultRow.style.width = input.offsetWidth + 'px';
-        // }
-        // if (shortLink) {
-        //   shortLink.style.width = input.offsetWidth + 'px';
-        // }
-      }
-    }
+
 
     function shorten() {
       const url = document.getElementById('linkInput').value;
@@ -266,7 +251,6 @@
     // Initial resize for autofill or prefilled value
     window.onload = function() {
       resizeInput(document.getElementById('linkInput'));
-      window.addEventListener('resize', syncShortenerWidth);
     }
   </script>
 </body>
