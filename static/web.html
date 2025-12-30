@@ -87,6 +87,8 @@
       gap: 0;
       justify-content: space-between;
       margin-bottom: 0.5em;
+      width: 100%;
+      min-width: 0;
     }
     .short-label {
       color: #fff;
@@ -110,9 +112,8 @@
       margin-top: 0;
       box-sizing: border-box;
       text-align: center;
-      /* Убираем фиксированную ширину, делаем автоширину */
-      width: auto;
-      /* убираем min/max-width, делаем автоширину */
+      width: 100%;
+      min-width: 0;
       user-select: none;
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -193,10 +194,14 @@
       var input = document.getElementById('linkInput');
       if (input) {
         document.documentElement.style.setProperty('--shortener-width', input.offsetWidth + 'px');
-        // Синхронизируем ширину блока результата и кнопки Copy
-        var resultRow = document.querySelector('.result-row');
+        // Синхронизируем ширину блока результата и ссылки
+        var resultRow = document.getElementById('short-result-row');
+        var shortLink = document.getElementById('short-link-anchor');
         if (resultRow) {
           resultRow.style.width = input.offsetWidth + 'px';
+        }
+        if (shortLink) {
+          shortLink.style.width = input.offsetWidth + 'px';
         }
       }
     }
@@ -214,7 +219,7 @@
           const shortUrl = window.location.origin + '/' + text;
           document.getElementById('result').innerHTML =
             '<div style="display:flex;flex-direction:column;align-items:center;width:100%;">'
-              + '<div class="result-row" style="padding:0 2px;">'
+              + '<div class="result-row" id="short-result-row" style="padding:0 2px;">'
                 + '<b class="short-label" style="margin-left:2px;">Your short link:</b>'
                 + '<span id="copied-msg" class="copied-msg">Copied!</span>'
                 + '<button class="copy-btn" onclick="copyToClipboard(\'' + shortUrl + '\')" title="Copy" aria-label="Copy">'
@@ -224,7 +229,7 @@
                     </svg>`
                 + '</button>'
               + '</div>'
-              + '<a href="' + shortUrl + '" target="_blank" draggable="false">' + shortUrl + '</a>'
+              + '<a id="short-link-anchor" href="' + shortUrl + '" target="_blank" draggable="false">' + shortUrl + '</a>'
             + '</div>';
           syncShortenerWidth();
         } else {
