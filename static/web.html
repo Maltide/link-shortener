@@ -108,7 +108,7 @@
       font-size: 1.25rem;
       box-shadow: 0 2px 8px rgba(10,72,59,0.10);
       transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-      display: block;
+      display: inline-block;
       margin-top: 0;
       box-sizing: border-box;
       text-align: center;
@@ -218,7 +218,7 @@
         if (status === 200) {
           const shortUrl = window.location.origin + '/' + text;
           document.getElementById('result').innerHTML =
-            '<div style="display:flex;flex-direction:column;align-items:center;width:100%;">'
+            '<div style="display:flex;flex-direction:column;align-items:center;">'
               + '<div class="result-row" id="short-result-row" style="padding:0 2px;">'
                 + '<b class="short-label" style="margin-left:2px;">Your short link:</b>'
                 + '<span id="copied-msg" class="copied-msg">Copied!</span>'
@@ -229,7 +229,7 @@
                     </svg>`
                 + '</button>'
               + '</div>'
-              + '<a id="short-link-anchor" href="' + shortUrl + '" target="_blank" draggable="false">' + shortUrl + '</a>'
+              + '<a id="short-link-anchor" href="' + shortUrl + '" target="_blank" draggable="false" style="display:inline-block;white-space:nowrap;width:auto;">' + shortUrl + '</a>'
             + '</div>';
         } else {
           let tip = '';
