@@ -83,11 +83,10 @@
     }
     .result-row {
       display: flex;
-      align-items: flex-end !important;
-      gap: 0;
+      align-items: center;
       justify-content: space-between;
       margin-bottom: 0.5em;
-      width: auto;
+      width: 100%;
       min-width: 0;
     }
     .short-label {
@@ -204,14 +203,18 @@
           const shortUrl = window.location.origin + '/' + text;
           document.getElementById('result').innerHTML =
             '<div class="result-row" id="short-result-row" style="padding:0 2px;">'
-              + '<b class="short-label" style="margin-left:2px;">Your short link:</b>'
-              + '<span id="copied-msg" class="copied-msg">Copied!</span>'
-              + '<button class="copy-btn" onclick="copyToClipboard(\'' + shortUrl + '\')" title="Copy" aria-label="Copy">'
-                + `<svg class="copy-img-green" width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
-                    <rect x="7" y="9" width="10" height="12" rx="2" fill="#fff" stroke="#0A483B" stroke-width="2"/>
-                    <rect x="3" y="3" width="10" height="12" rx="2" fill="#fff" stroke="#8BB837" stroke-width="2"/>
-                  </svg>`
-              + '</button>'
+              + '<div style="display:flex;align-items:center;">'
+                + '<b class="short-label" style="margin-left:2px;">Your short link:</b>'
+              + '</div>'
+              + '<div style="display:flex;align-items:center;">'
+                + '<span id="copied-msg" class="copied-msg">Copied!</span>'
+                + '<button class="copy-btn" onclick="copyToClipboard(\'' + shortUrl + '\')" title="Copy" aria-label="Copy">'
+                  + `<svg class="copy-img-green" width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
+                      <rect x="7" y="9" width="10" height="12" rx="2" fill="#fff" stroke="#0A483B" stroke-width="2"/>
+                      <rect x="3" y="3" width="10" height="12" rx="2" fill="#fff" stroke="#8BB837" stroke-width="2"/>
+                    </svg>`
+                + '</button>'
+              + '</div>'
             + '</div>'
             + '<div style="text-align:center;width:auto;margin:0 auto;display:block;">'
             +   '<span style="display:inline-block;white-space:nowrap;width:auto;">'
