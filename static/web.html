@@ -87,7 +87,7 @@
       gap: 0;
       justify-content: space-between;
       margin-bottom: 0.5em;
-      width: 100%;
+      width: auto;
       min-width: 0;
     }
     .short-label {
@@ -112,7 +112,7 @@
       margin-top: 0;
       box-sizing: border-box;
       text-align: center;
-      width: 100%;
+      width: auto;
       min-width: 0;
       user-select: none;
       -webkit-user-select: none;
@@ -194,15 +194,15 @@
       var input = document.getElementById('linkInput');
       if (input) {
         document.documentElement.style.setProperty('--shortener-width', input.offsetWidth + 'px');
-        // Синхронизируем ширину блока результата и ссылки
-        var resultRow = document.getElementById('short-result-row');
-        var shortLink = document.getElementById('short-link-anchor');
-        if (resultRow) {
-          resultRow.style.width = input.offsetWidth + 'px';
-        }
-        if (shortLink) {
-          shortLink.style.width = input.offsetWidth + 'px';
-        }
+        // Синхронизируем ширину только input
+        // var resultRow = document.getElementById('short-result-row');
+        // var shortLink = document.getElementById('short-link-anchor');
+        // if (resultRow) {
+        //   resultRow.style.width = input.offsetWidth + 'px';
+        // }
+        // if (shortLink) {
+        //   shortLink.style.width = input.offsetWidth + 'px';
+        // }
       }
     }
 
@@ -231,7 +231,6 @@
               + '</div>'
               + '<a id="short-link-anchor" href="' + shortUrl + '" target="_blank" draggable="false">' + shortUrl + '</a>'
             + '</div>';
-          syncShortenerWidth();
         } else {
           let tip = '';
           if (text !== 'This site does not allow shortening its links.' && !text.includes('timeout') && !text.includes('handshake')) {
